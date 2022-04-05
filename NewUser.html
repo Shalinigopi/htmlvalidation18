@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<script src="assets/plugins/sweetalert.min.js"></script>
+<link rel="stylesheet" href="assets/plugins/css/sweetalert.css" />
+<script src="assets/plugins/validate2.js"></script>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+
+
+<style>
+.sweet-alert h2 {
+	font-size: 24px;
+	margin: 10px 0;
+}
+
+.sweet-alert button {
+	margin-top: 0;
+}
+
+.card {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	transition: 0.3s;
+	width: 40%;
+}
+
+.card:hover {
+	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.container {
+	padding: 2px 16px;
+}
+</style>
+</head>
+
+<body>
+	<section id="loginbox" class="col-md-10 col-md-offset-1"
+		style="margin-top: 40px;">
+
+		<div id="test" style="padding-top: 50px;">
+			<div id="page-wrapper">
+				<form role="form" id="storeData" name="storeData" method="post"
+					th:object="${regDto}" autocomplete="off"
+					enctype="multipart/form-data">
+
+
+					<div class="box box-info" style="border-top-color: #051d45;">
+
+						<div class="box-header with-border"
+							style="background-color: #051d45;">
+							<h3 class="box-title" style="color: white; font-weight: bold;">Registration
+								Form</h3>
+						</div>
+
+						<div class="box-body">
+							<div class="form-group text-center">
+								<div th:if="${error!=null}"
+									class="p-3 mb-2 bg-danger text-white"
+									style="font-weight: bold; width: 50%; margin: auto; padding: 9px 0;"
+									th:text="${error}"></div>
+								<div th:if="${success!=null}"
+									class="p-3 mb-2 bg-success text-white"
+									style="font-weight: bold; width: 50%; margin: auto; padding: 9px 0;"
+									th:text="${success}"></div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-4">
+									<label for="acadYear" class="control-label">Client Name
+										<span style="color: red; font-weight: bold;">*</span>
+									</label> <input type="text"
+										onkeyup="this.value=this.value.toUpperCase()"
+										name="clientName" id="clientName"
+										th:if="${msg!=null ? 'NULL' : 'NOT NULL'}"
+										class="form-control" required pattern="[A-Za-z]+">
+								</div>
+								<div class="col-sm-4">
+									<label for="acadYear" class="control-label">Email <span
+										style="color: red; font-weight: bold;"> *</span></label> <input
+										type="text" name="clientEmailId" id="clientEmailId"
+										class="form-control" required="required /">
+								</div>
+
+
+
+								<div class="col-sm-4">
+									<label for="acadYear" class="control-label">Mobile No.<span
+										style="color: red; font-weight: bold;"> *</span></label> <input
+										type="text" name="mobileNo" id="mobileNo" maxlength="10"
+										class="form-control" required="required  onblur="
+										extractNumber(this,0,false);" 
+                            			onkeyup="extractNumber(this,0,false);"
+										onkeypress="return blockNonNumbers(this, event, 0, false);"/">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-4">
+									<label for="acadYear" class=" control-label">Organization
+										Name<span style="color: red; font-weight: bold;"> *</span>
+									</label> <input type="text"
+										onkeyup="this.value=this.value.toUpperCase()" name="orgName"
+										id="orgName" class="form-control" required="required /">
+								</div>
+								<div class="col-sm-4">
+									<label for="acadYear" class=" control-label">Organization
+										Website<span style="color: red; font-weight: bold;"> *</span>
+									</label> <input type="url" name="orgWebsite" id="orgWebsite"
+										class="form-control" required="required /">
+								</div>
+								<div class="col-sm-4">
+									<label for="acadYear" class="control-label"> Category:<span
+										style="color: red; font-weight: bold;"> *</span>
+									</label> <select class="form-control" id="category">
+										<option value="">Select Category</option>
+										<option value="PAN">Academic</option>
+										<option value="TAN">Industry</option>
+										<option value="GSTIN">Research and development</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-4">
+									<label for="acadYear" class="control-label"> Select:<span
+										style="color: red; font-weight: bold;"> *</span>
+									</label> <select class="form-control" id="Select">
+										<option value="">Select PAN/TAN/GSTIN</option>
+										<option value="PAN">PAN</option>
+										<option value="TAN">TAN</option>
+										<option value="GSTIN">GSTIN</option>
+									</select>
+								</div>
+								<div class="col-sm-4">
+									<label for="acadYear" class=" control-label">Enter
+										PAN/TAN/GSTIN No:<span style="color: red; font-weight: bold;">*</span>
+									</label> <input type="text" name="GstNo" id="GstNo"
+										class="form-control" />
+								</div>
+								<div class="col-sm-4">
+									<label for="acadYear" class="ccontrol-label">Address
+										Line 1 <span style="color: red; font-weight: bold;">*</span>
+									</label> <input type="text"
+										onkeyup="this.value=this.value.toUpperCase()"
+										name="addLineOne" id="addLineOne" class="form-control" />
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-4">
+									<label for="acadYear" class="control-label">Address
+										Line 2 <span style="color: red; font-weight: bold;">*</span>
+									</label> <input type="text"
+										onkeyup="this.value=this.value.toUpperCase()"
+										name="addLineTwo" id="addLineTwo" class="form-control" />
+								</div>
+								<div class="col-sm-4">
+									<label for="acadYear" class=" control-label">District <span
+										style="color: red; font-weight: bold;">*</span>
+									</label> <input type="text"
+										onkeyup="this.value=this.value.toUpperCase()" name="district"
+										id="district" class="form-control" />
+								</div>
+								<div class="col-sm-4">
+									<label for="acadYear" class=" control-label">State <span
+										style="color: red; font-weight: bold;">*</span></label> </label> <input
+										type="text" onkeyup="this.value=this.value.toUpperCase()"
+										name="state" id="state" class="form-control" />
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-4">
+									<label for="acadYear" class=" control-label">Country <span
+										style="color: red; font-weight: bold;">*</span>
+									</label> <input type="text"
+										onkeyup="this.value=this.value.toUpperCase()" name="country"
+										id="country" class="form-control" />
+								</div>
+								<div class="col-sm-4">
+									<label for="acadYear" class="control-label">Pincode <span
+										style="color: red; font-weight: bold;">*</span>
+									</label> <input type="text" name="pincode" id="pincode" maxlength="6"
+										class="form-control" required="required  onblur="
+										extractNumber(this,0,false);" 
+                            			onkeyup="extractNumber(this,0,false);"
+										onkeypress="return blockNonNumbers(this, event, 0, false);"/">
+								</div>
+								<div class="col-sm-4 ">
+									<label class="form-label" for="customFile">ID Proof <span
+										style="color: red; font-weight: bold;">*</span></label> <input
+										type="file" class="form-control" id="customFile" />
+								</div>
+							</div>
+							<div class="col-md-12" align="center">
+								<br />
+								<br />
+								<br /> <input type="button" name="button" value="Submit"
+									class="btn" style="background-color: #051d45; color: white;"
+									onclick="doSaveRegistration();" />
+
+							</div>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+		<script th:inline="javascript">
+
+/*<![CDATA[*/
+
+
+		function doSaveRegistration() {
+			d = document.storeData;
+
+			/*if (d.clientName.value == "") {
+				alert("Enter clientName ");
+				d.clientName.focus();
+				return false;
+			}*/
+			
+			if (ValidateclientName(d.clientName.value) ==false)
+			{
+			  swal("Please Enter the Name.");
+			  d.clientName.focus();
+			  return false;
+			}
+		/*	if (ValidateEmail(d.clientEmailId.value)==false)
+            {
+              swal("Enter the Valid Email Id");
+              d.clientEmailId.focus();
+              return false;
+            }*/
+			if(ValidateEmail(d.clientEmailId.value)==false)
+            {
+	swal("Enter the Valid Email Id");
+              d.clientEmailId.value=""
+              d.clientEmailId.focus();
+              return false;
+            }
+			if (ValidateMobile(d.mobileNo.value)==false)
+            {
+              swal("Enter the Mobile Number");
+              d.mobileNo.focus();
+              return false;
+            }
+            
+			if (d.orgName.value == "") {
+				swal("Enter organization Name ");
+				d.orgName.focus();
+				return false;
+			}
+			if (d.orgWebsite.value.length == "") {
+				swal("Organization Website cant be empty");
+				d.orgWebsite.focus();
+				return false;
+			}
+
+			if (d.category.value.length == "") {
+				swal("select Category cant be empty");
+				d.Category.focus();
+				return false;
+			}
+			if (d.Select.value.length == "") {
+				swal("select PAN/TAN/GSTIN No: cant be empty");
+				d.Select.focus();
+				return false;
+			}
+			if (d.GstNo.value.length == 0) {
+				swal("Enter PAN/TAN/GSTIN No: ");
+				d.GstNo.focus();
+				return false;
+			}
+			if (d.addLineOne.value.length == "") {
+				swal("Enter Address Line1: ");
+				d.addLineOne.focus();
+				return false;
+			}
+			if (d.addLineTwo.value.length == "") {
+				swal("Enter Address Line2: ");
+				d.addLineTwo.focus();
+				return false;
+			}
+			if (d.district.value.length == "") {
+				swal("Enter district cant be empty: ");
+				d.district.focus();
+				return false;
+			}
+			if (d.state.value.length == "") {
+				swal("Enter state cant be empty: ");
+				d.state.focus();
+				return false;
+			}
+			if (d.country.value.length == "") {
+				swal("Enter country cant be empty: ");
+				d.country.focus();
+				return false;
+			}
+			if (d.pincode.value.length == 0) {
+				swal("Enter pincode cant be empty: ");
+				d.pincode.focus();
+				return false;
+			}
+
+			regData();
+		}
+		function regData() {
+			alert('Am inside');
+
+			var myform = document.getElementById("storeData");
+			$.ajax({
+				url: "/client/mt/newRegistration",
+				type: "POST",
+				data: fd,
+				cache: false,
+				processData: false,
+				contentType: false,
+				success: function (response) {
+					$("#section").html(response);
+					alert(response);
+
+				}
+
+
+			});
+		}
+		
+		function ValidateEmail(email)  
+            {  
+              var clientEmailId = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+              return clientEmailId.test(email);;
+            }
+            	
+		function ValidateMobile(mobile)  
+            {  
+              var mobileNo =/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+              return mobileNo.test(mobile);;
+            }
+            function ValidateclientName(inputname)
+      { 
+      var clientName = /^[A-Za-z]+$/;
+     return clientName.test(inputname);;
+            
+            }
+            
+            
+            
+	/*]]>*/
+
+	</script>
+
+	</section>
+
+</body>
+
+
+</html>
